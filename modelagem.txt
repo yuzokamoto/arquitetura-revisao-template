@@ -1,0 +1,36 @@
+=======================================
+// Negócio
+=======================================
+
+PRODUCTS 
+    id string
+    name string
+    price number
+
+        BRANDS
+            id string
+            name string (unique)
+
+
+
+
+=======================================
+// Banco de dados
+=======================================
+
+// todo produto tem uma marca,
+// e toda marca tem vários produtos
+
+M PRODUCT TO 1 BRAND
+
+
+PRODUCTS
+    id TEXT
+    name TEXT
+    price REAL
+    brand_id TEXT FOREIGN KEY => BRANDS.id
+
+BRANDS
+    id string
+    name string (unique)
+
