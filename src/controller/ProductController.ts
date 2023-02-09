@@ -1,19 +1,13 @@
 import { Request, Response } from "express"
 import knex from "knex"
 
-// poluída para um caramba
-
-// recebe req e devolve res
-
-// conecta com banco de dados
-
-// valida regras de negócio e tipagem
-
 export class ProductController {
     constructor() {}
 
     public getProducts = async (req: Request, res: Response) => {
         try {
+            const q = req.query.q
+
             const db = knex({
                 client: "sqlite3",
                 connection: {
@@ -28,11 +22,64 @@ export class ProductController {
                     }
                 }
             })
-    
-            const output = await db("products").select()
-    
-            res.status(200).send(output)
-    
+
+            if (q) {
+                const productsDB = await db("products").select()
+                    .where("name", "LIKE", `%${q}%`)
+
+                const brandsDB = await db("brands").select()
+
+                const products = productsDB.map((productDB) => {
+                    return {
+                        id: productDB.id,
+                        name: productDB.name,
+                        price: productDB.price,
+                        brand: getBrand(productDB.brand_id)
+                    }
+                })
+
+                function getBrand(brandId: string) {
+                    const brand = brandsDB.find((brandDB) => {
+                        return brandDB.id === brandId
+                    })
+
+                    return {
+                        id: brand.id,
+                        name: brand.name
+                    }
+                }
+
+                res.status(200).send(products)
+
+            } else {
+
+                const productsDB = await db("products").select()
+
+                const brandsDB = await db("brands").select()
+
+                const products = productsDB.map((productDB) => {
+                    return {
+                        id: productDB.id,
+                        name: productDB.name,
+                        price: productDB.price,
+                        brand: getBrand(productDB.brand_id)
+                    }
+                })
+
+                function getBrand(brandId: string) {
+                    const brand = brandsDB.find((brandDB) => {
+                        return brandDB.id === brandId
+                    })
+
+                    return {
+                        id: brand.id,
+                        name: brand.name
+                    }
+                }
+
+                res.status(200).send(products)
+            }
+
         } catch (error) {
             console.log(error)
     
