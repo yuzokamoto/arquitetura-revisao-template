@@ -5,6 +5,27 @@ const productDB = {
     "brand_id": "b001"
 }
 
+class ProductDB {
+    constructor(
+        public id: string,
+        public name: string,
+        public price: number,
+        public brand_id: string
+    ) {}
+}
+
+class Product {
+    constructor(
+        public id: string,
+        public name: string,
+        public price: number,
+        public brand: {
+            id: string,
+            name: string
+        }
+    ) {}
+}
+
 const product = {
     "id": "p005",
     "name": "Arroz",
